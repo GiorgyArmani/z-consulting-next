@@ -6,10 +6,12 @@ export function MobileMenu({
   lang,
   open,
   onClose,
+  onStart,
 }: {
   lang: Lang;
   open: boolean;
   onClose: () => void;
+  onStart: () => void;
 }) {
   const D = DATA.nav;
   return (
@@ -22,9 +24,15 @@ export function MobileMenu({
           {t(l, lang)}
         </a>
       ))}
-      <a href="#contact" onClick={onClose}>
+      <button
+        className="mm-cta"
+        onClick={() => {
+          onClose();
+          onStart();
+        }}
+      >
         {t(D.cta, lang)}
-      </a>
+      </button>
     </div>
   );
 }

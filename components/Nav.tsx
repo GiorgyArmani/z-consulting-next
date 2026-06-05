@@ -9,10 +9,12 @@ export function Nav({
   lang,
   setLang,
   onMenu,
+  onStart,
 }: {
   lang: Lang;
   setLang: (l: Lang) => void;
   onMenu: () => void;
+  onStart: () => void;
 }) {
   const D = DATA.nav;
   const [pastHero, setPastHero] = useState(false);
@@ -48,9 +50,9 @@ export function Nav({
             <button className={lang === 'en' ? 'on' : ''} onClick={() => setLang('en')}>EN</button>
             <button className={lang === 'es' ? 'on' : ''} onClick={() => setLang('es')}>ES</button>
           </div>
-          <a className="btn btn-primary" href="#contact">
+          <button className="btn btn-primary" onClick={onStart}>
             {t(D.cta, lang)} <Arrow />
-          </a>
+          </button>
           <button className="menu-btn" aria-label="Menu" onClick={onMenu}>
             <svg width="20" height="20" viewBox="0 0 20 20">
               <path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />

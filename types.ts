@@ -59,6 +59,27 @@ export interface FooterCol {
   links: Loc[];
 }
 
+/** Copy for the "Start a project" modal form. */
+export interface FormCopy {
+  tag: Loc;
+  h2: Loc;
+  p: Loc;
+  name: Loc;
+  email: Loc;
+  company: Loc;
+  message: Loc;
+  namePh: Loc;
+  emailPh: Loc;
+  companyPh: Loc;
+  messagePh: Loc;
+  submit: Loc;
+  sending: Loc;
+  sentH: Loc;
+  sentP: Loc;
+  done: Loc;
+  error: Loc;
+}
+
 export interface SiteData {
   nav: { links: NavLink[]; cta: Loc };
   hero: {
@@ -75,6 +96,7 @@ export interface SiteData {
   process: { tag: Loc; h2: Loc; lead: Loc; steps: ProcessStep[] };
   services: { tag: Loc; h2: Loc; items: LocArr };
   cta: { h2: LocArr; p: Loc; btn: Loc; email: string };
+  form: FormCopy;
   footer: { tagline: Loc; cols: FooterCol[]; rights: Loc };
 }
 

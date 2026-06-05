@@ -3,7 +3,7 @@ import { t } from '../lib/locale';
 import { Arrow } from './Arrow';
 import type { Lang } from '../types';
 
-export function Contact({ lang }: { lang: Lang }) {
+export function Contact({ lang, onStart }: { lang: Lang; onStart: () => void }) {
   const D = DATA.cta;
   const [a, b, c] = D.h2[lang];
   return (
@@ -23,9 +23,9 @@ export function Contact({ lang }: { lang: Lang }) {
             </a>
           </div>
           <div className="cta-row" style={{ marginTop: '22px' }}>
-            <a className="btn btn-accent" href={`mailto:${D.email}`}>
+            <button className="btn btn-accent" onClick={onStart}>
               {t(D.btn, lang)} <Arrow />
-            </a>
+            </button>
           </div>
         </div>
       </div>

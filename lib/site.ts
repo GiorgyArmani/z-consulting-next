@@ -6,12 +6,12 @@ export const SITE = {
   name: 'Z. Consulting',
   shortName: 'Z. Consulting',
   url: 'https://zconsulting.com',
-  email: 'hello@zconsulting.dev',
+  email: 'hello@zconsulting.tech',
   locale: 'en_US',
   altLocale: 'es_ES',
   tagline: 'Solutions from the A to the Z',
   description:
-    'Z. Consulting is a tailor-made software studio. We design and engineer the exact product each client needs — from healthcare scheduling platforms to lending and fintech systems and brand sites.',
+    'Z. Consulting is a tailor-made software studio. We design and engineer the exact product each client needs, from healthcare scheduling platforms to lending and fintech systems and brand sites.',
   keywords: [
     'software studio',
     'custom software development',

@@ -7,7 +7,7 @@ import { Typewriter } from './Typewriter';
 import Lightfall from './Lightfall';
 import type { Lang } from '../types';
 
-export function Hero({ lang }: { lang: Lang }) {
+export function Hero({ lang, onStart }: { lang: Lang; onStart: () => void }) {
   const D = DATA.hero;
   const { theme } = useTheme();
   const colors = useMemo(
@@ -46,9 +46,9 @@ export function Hero({ lang }: { lang: Lang }) {
         </h1>
         <p className="hero-sub">{t(D.sub, lang)}</p>
         <div className="hero-cta">
-          <a className="btn btn-accent cta-impact" href="#contact">
+          <button className="btn btn-accent cta-impact" onClick={onStart}>
             {t(D.primary, lang)} <Arrow />
-          </a>
+          </button>
           <a className="btn btn-glass" href="#work">
             {t(D.secondary, lang)}
           </a>

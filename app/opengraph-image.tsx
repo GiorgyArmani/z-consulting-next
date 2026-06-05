@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { SITE } from '../lib/site';
 
-export const alt = `${SITE.name} — ${SITE.tagline}`;
+export const alt = `${SITE.name} | ${SITE.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -50,7 +50,7 @@ export default function OpengraphImage() {
             Solutions from the A to the Z.
           </div>
           <div style={{ fontSize: 34, color: 'rgba(252,247,239,0.72)', maxWidth: 880, lineHeight: 1.3 }}>
-            Tailor-made software studio — healthcare, lending &amp; fintech, and brand sites, built end to end.
+            Tailor-made software studio: healthcare, lending &amp; fintech, and brand sites, built end to end.
           </div>
         </div>
 

@@ -16,13 +16,7 @@ export function Footer({ lang }: { lang: Lang }) {
 
   return (
     <footer className="footer-dark" id="menu">
-      <div className="wrap flow-head">
-        <p className="eyebrow" style={{ color: theme.accent }}>
-          {lang === 'es' ? 'Explora' : 'Explore'}
-        </p>
-        <span className="flow-note">{lang === 'es' ? 'Pasa el cursor' : 'Hover to explore'}</span>
-      </div>
-      <FlowingMenu items={items} speed={16} accent={theme.accent} />
+           <FlowingMenu items={items} speed={16} accent={theme.accent} />
       <div className="wrap footer-bottom-dark">
         <div className="fb-brand">
           <a className="brand" href="#top">
