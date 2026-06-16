@@ -68,6 +68,9 @@ export interface FormCopy {
   email: Loc;
   company: Loc;
   message: Loc;
+  attach: Loc;
+  attachHint: Loc;
+  attachCta: Loc;
   namePh: Loc;
   emailPh: Loc;
   companyPh: Loc;

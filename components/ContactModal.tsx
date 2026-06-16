@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { DATA } from '../data';
 import { t } from '../lib/locale';
 import { Arrow } from './Arrow';
@@ -20,6 +20,7 @@ export function ContactModal({
 }) {
   const D = DATA.form;
   const [status, setStatus] = useState<Status>('idle');
+  const [files, setFiles] = useState<File[]>([]);
   const firstFieldRef = useRef<HTMLInputElement>(null);
 
   // Esc to close + scroll lock while open.
@@ -38,6 +39,7 @@ export function ContactModal({
   useEffect(() => {
     if (open) {
       setStatus('idle');
+      setFiles([]);
       const id = window.setTimeout(() => firstFieldRef.current?.focus(), 380);
       return () => clearTimeout(id);
     }
@@ -47,20 +49,23 @@ export function ContactModal({
     e.preventDefault();
     if (status === 'sending') return;
     const form = e.currentTarget;
-    const payload = Object.fromEntries(new FormData(form));
+    // Multipart so file attachments ride along with the text fields.
+    const payload = new FormData(form);
+    payload.set('lang', lang);
     setStatus('sending');
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch('/api/contact', { method: 'POST', body: payload });
       if (!res.ok) throw new Error(String(res.status));
       form.reset();
+      setFiles([]);
       setStatus('sent');
     } catch {
       setStatus('error');
     }
+  }
+
+  function onFilesChange(e: ChangeEvent<HTMLInputElement>) {
+    setFiles(Array.from(e.target.files ?? []));
   }
 
   return (
@@ -138,6 +143,33 @@ export function ContactModal({
               <div className="cm-field">
                 <label htmlFor="cm-message">{t(D.message, lang)}</label>
                 <textarea id="cm-message" name="message" required maxLength={5000} rows={5} placeholder={t(D.messagePh, lang)} />
+              </div>
+
+              <div className="cm-field">
+                <label htmlFor="cm-files">{t(D.attach, lang)}</label>
+                <input
+                  id="cm-files"
+                  className="cm-file-input"
+                  name="files"
+                  type="file"
+                  multiple
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,.png,.jpg,.jpeg,.gif,.webp,image/*,application/pdf"
+                  onChange={onFilesChange}
+                />
+                <label htmlFor="cm-files" className="cm-file">
+                  <span className="cm-file-cta">📎 {t(D.attachCta, lang)}</span>
+                  <span className="cm-file-hint">{t(D.attachHint, lang)}</span>
+                </label>
+                {files.length > 0 && (
+                  <ul className="cm-file-list">
+                    {files.map((f, i) => (
+                      <li key={`${f.name}-${i}`}>
+                        <span className="cm-file-name">{f.name}</span>
+                        <span className="cm-file-size">{(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
 
               <button className={`btn btn-accent cm-submit${status === 'sending' ? ' busy' : ''}`} type="submit" disabled={status === 'sending'}>

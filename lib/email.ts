@@ -11,6 +11,8 @@ interface InquiryEmail {
   email: string;
   company?: string;
   message: string;
+  /** File names attached to the inquiry, listed for reference. */
+  attachments?: string[];
 }
 
 /* Brand tokens — keep in sync with :root in app/globals.css */
@@ -51,15 +53,20 @@ function fieldRow(label: string, valueHtml: string): string {
     </tr>`;
 }
 
-export function renderInquiryEmail({ name, email, company, message }: InquiryEmail): string {
+export function renderInquiryEmail({ name, email, company, message, attachments }: InquiryEmail): string {
   const safeName = escapeHtml(name);
   const safeEmail = escapeHtml(email);
   const preheader = escapeHtml(`${name}${company ? ` (${company})` : ''}: ${message.slice(0, 90)}`);
+
+  const attachmentsHtml = attachments && attachments.length
+    ? attachments.map((f) => `📎 ${escapeHtml(f)}`).join('<br />')
+    : '';
 
   const rows = [
     fieldRow('Name', safeName),
     fieldRow('Email', `<a href="mailto:${safeEmail}" style="color:${C.accent};font-weight:600;text-decoration:none;">${safeEmail}</a>`),
     company ? fieldRow('Company', escapeHtml(company)) : '',
+    attachmentsHtml ? fieldRow('Files', attachmentsHtml) : '',
   ].join('');
 
   return `<!DOCTYPE html>
@@ -143,4 +150,133 @@ export function renderInquiryEmail({ name, email, company, message }: InquiryEma
   </table>
 </body>
 </html>`;
+}
+
+/* ── Client auto-reply ─────────────────────────────────────────────────────
+ * The "we got it, a proposal is coming" confirmation sent to the visitor.
+ * Localized to the language they used on the site (en / es). */
+
+interface ConfirmationEmail {
+  name: string;
+  lang: 'en' | 'es';
+  /** File names the visitor attached, echoed back so they know we received them. */
+  attachments?: string[];
+}
+
+const CONFIRM_COPY = {
+  en: {
+    subject: 'We received your project inquiry — Z. Consulting',
+    preheader: "Thanks for reaching out. We'll follow up with a proposal within one business day.",
+    eyebrow: 'Inquiry received',
+    heading: (n: string) => `Thanks, ${n} — we've got it.`,
+    body: "Your project details just landed in our inbox. Our team is reviewing them now and will reach out with a tailored proposal within one business day.",
+    filesLabel: 'Files we received',
+    closing: 'In the meantime, feel free to reply to this email with anything you forgot to mention.',
+    signoff: 'The Z. Consulting team',
+    footer: 'Solutions from the A to the Z.',
+  },
+  es: {
+    subject: 'Recibimos tu solicitud de proyecto — Z. Consulting',
+    preheader: 'Gracias por escribirnos. Te enviaremos una propuesta en un día hábil.',
+    eyebrow: 'Solicitud recibida',
+    heading: (n: string) => `Gracias, ${n} — lo recibimos.`,
+    body: 'Los detalles de tu proyecto acaban de llegar a nuestra bandeja de entrada. Nuestro equipo los está revisando y te enviará una propuesta personalizada en un día hábil.',
+    filesLabel: 'Archivos que recibimos',
+    closing: 'Mientras tanto, puedes responder a este correo si olvidaste mencionar algo.',
+    signoff: 'El equipo de Z. Consulting',
+    footer: 'Soluciones de la A a la Z.',
+  },
+} as const;
+
+export function renderConfirmationEmail({ name, lang, attachments }: ConfirmationEmail): { subject: string; html: string; text: string } {
+  const L = CONFIRM_COPY[lang] ?? CONFIRM_COPY.en;
+  const safeName = escapeHtml(name);
+
+  const filesHtml = attachments && attachments.length
+    ? `
+              <p style="margin:24px 0 8px;font-family:${TEXT};font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${C.ink3};">${L.filesLabel}</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="background:${C.paper2};border-left:3px solid ${C.accent};border-radius:0 10px 10px 0;padding:14px 18px;font-family:${TEXT};font-size:14px;line-height:1.7;color:${C.ink};">${attachments.map((f) => `📎 ${escapeHtml(f)}`).join('<br />')}</td>
+                </tr>
+              </table>`
+    : '';
+
+  const text = [
+    L.heading(name),
+    '',
+    L.body,
+    attachments && attachments.length ? `\n${L.filesLabel}:\n${attachments.map((f) => `- ${f}`).join('\n')}` : '',
+    '',
+    L.closing,
+    '',
+    `— ${L.signoff}`,
+  ]
+    .filter((l) => l !== '')
+    .join('\n');
+
+  const html = `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>${escapeHtml(L.subject)}</title>
+</head>
+<body style="margin:0;padding:0;background:${C.paper};">
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${escapeHtml(L.preheader)}</div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${C.paper};">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+
+          <!-- Brand header -->
+          <tr>
+            <td style="padding:0 6px 18px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="36" height="36" align="center" valign="middle" style="background:${C.ink};border-radius:9px;font-family:${DISPLAY};font-weight:700;font-size:16px;color:${C.onAccent};line-height:36px;">Z.</td>
+                  <td style="padding-left:12px;font-family:${DISPLAY};font-weight:600;font-size:18px;letter-spacing:-0.3px;color:${C.ink};">Z<span style="color:${C.accent};">.</span> Consulting</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Card -->
+          <tr>
+            <td style="background:${C.card};border:1px solid ${C.line};border-radius:14px;padding:34px 36px;">
+
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="26" style="padding-right:10px;"><div style="width:26px;height:2px;background:${C.accent};font-size:0;line-height:0;">&nbsp;</div></td>
+                  <td style="font-family:${TEXT};font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${C.accent};">${escapeHtml(L.eyebrow)}</td>
+                </tr>
+              </table>
+
+              <h1 style="margin:16px 0 18px;font-family:${DISPLAY};font-weight:600;font-size:26px;line-height:1.15;letter-spacing:-0.5px;color:${C.ink};">${escapeHtml(L.heading(name)).replace(escapeHtml(name), `<span style="color:${C.accent};">${safeName}</span>`)}</h1>
+
+              <p style="margin:0;font-family:${TEXT};font-size:16px;line-height:1.7;color:${C.ink2};">${escapeHtml(L.body)}</p>
+              ${filesHtml}
+              <p style="margin:24px 0 0;font-family:${TEXT};font-size:15px;line-height:1.7;color:${C.ink2};">${escapeHtml(L.closing)}</p>
+
+              <p style="margin:28px 0 0;font-family:${DISPLAY};font-size:15px;font-weight:600;color:${C.ink};">— ${escapeHtml(L.signoff)}</p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:22px 6px 0;font-family:${TEXT};font-size:12px;line-height:1.6;color:${C.ink3};">
+              <a href="https://zconsulting.tech" style="color:${C.ink2};text-decoration:none;font-weight:600;">zconsulting.tech</a> &middot; ${escapeHtml(L.footer)}
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  return { subject: L.subject, html, text };
 }

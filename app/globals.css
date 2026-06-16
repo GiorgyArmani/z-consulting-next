@@ -431,6 +431,28 @@ p{margin:0}
 }
 .cm-field textarea{resize:vertical;min-height:120px}
 .cm-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+
+/* ---- file attachments ---- */
+.cm-file-input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0 0 0 0);pointer-events:none}
+.cm-file{
+  display:flex;flex-direction:column;gap:4px;cursor:pointer;
+  background:rgba(255,255,255,.05);border:1.5px dashed rgba(255,255,255,.2);
+  border-radius:13px;padding:14px 16px;transition:border-color .2s, background .2s;
+}
+.cm-file:hover{border-color:var(--accent);background:rgba(255,255,255,.08)}
+.cm-file-input:focus-visible+.cm-file{
+  border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%, transparent);
+}
+.cm-file-cta{color:var(--paper);font-weight:600}
+.cm-file-hint{font-size:.8rem;color:rgba(252,247,239,.4)}
+.cm-file-list{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.cm-file-list li{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:9px;padding:8px 12px;font-size:.86rem;color:var(--paper);
+}
+.cm-file-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.cm-file-size{flex-shrink:0;color:rgba(252,247,239,.45);font-variant-numeric:tabular-nums}
 .cm-submit{justify-content:center;margin-top:6px;font-size:1.02rem;padding:16px 26px}
 .cm-submit:disabled{opacity:.75;cursor:default}
 .cm-spinner{

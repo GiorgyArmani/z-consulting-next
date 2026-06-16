@@ -151,6 +151,12 @@ export const DATA: SiteData = {
     email: { en: 'Email', es: 'Correo' },
     company: { en: 'Company (optional)', es: 'Empresa (opcional)' },
     message: { en: 'Project details', es: 'Detalles del proyecto' },
+    attach: { en: 'Attachments (optional)', es: 'Archivos adjuntos (opcional)' },
+    attachHint: {
+      en: 'Up to 5 files · 15 MB total · PDF, Office docs, images, ZIP',
+      es: 'Hasta 5 archivos · 15 MB en total · PDF, documentos de Office, imágenes, ZIP',
+    },
+    attachCta: { en: 'Choose files', es: 'Elegir archivos' },
     namePh: { en: 'Jane Doe', es: 'María Pérez' },
     emailPh: { en: 'you@company.com', es: 'tu@empresa.com' },
     companyPh: { en: 'Acme Inc.', es: 'Acme S.A.' },
@@ -159,8 +165,8 @@ export const DATA: SiteData = {
     sending: { en: 'Sending…', es: 'Enviando…' },
     sentH: { en: 'Your message is on its way', es: 'Tu mensaje va en camino' },
     sentP: {
-      en: "Thanks for reaching out. We'll review your project and get back to you within one business day.",
-      es: 'Gracias por escribirnos. Revisaremos tu proyecto y te contactaremos en un día hábil.',
+      en: "Thanks for reaching out — we've sent a confirmation to your inbox. We'll review your project and follow up with a proposal within one business day.",
+      es: 'Gracias por escribirnos: te enviamos una confirmación a tu correo. Revisaremos tu proyecto y te enviaremos una propuesta en un día hábil.',
     },
     done: { en: 'Done', es: 'Listo' },
     error: { en: 'Something went wrong. Email us directly at', es: 'Algo salió mal. Escríbenos directamente a' },
