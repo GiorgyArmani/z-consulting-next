@@ -168,7 +168,7 @@ const CONFIRM_COPY = {
     subject: 'We received your project inquiry — Z. Consulting',
     preheader: "Thanks for reaching out. We'll follow up with a proposal within one business day.",
     eyebrow: 'Inquiry received',
-    heading: (n: string) => `Thanks, ${n} — we've got it.`,
+    heading: (n: string) => `Thanks, ${n} we've got it.`,
     body: "Your project details just landed in our inbox. Our team is reviewing them now and will reach out with a tailored proposal within one business day.",
     filesLabel: 'Files we received',
     closing: 'In the meantime, feel free to reply to this email with anything you forgot to mention.',
